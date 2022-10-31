@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { NotificationsService } from './services/notifications.service';
+import { RegisterDevice } from './dto/request.dto';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,6 +11,9 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 export class AppComponent {
   title = 'notification-webapp';
 
+  constructor(private _notificationService: NotificationsService){
+
+  }
   initFcmToken() {
     const firebaseConfig = {
       apiKey: "AIzaSyB18_nAFNwDXvPnI6s3LFyf0AsMzOAhqBc",
@@ -29,6 +34,12 @@ export class AppComponent {
         if (currentToken) {
           console.log('fcm_token');
           console.log(currentToken);
+          const requestDevice: RegisterDevice = {
+            account_id :'huytest1',
+            fcm_token: currentToken,
+            device_id: 'device-web'
+          }
+          this._notificationService.registerNotification(requestDevice);
         } else {
           // Show permission request UI
           console.log(
